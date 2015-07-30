@@ -1,8 +1,6 @@
 module Connectors
 
   class Github
-    REPOSITORY = "GithubRepository"
-    COMMIT =  "GithubCommit"
 
     def initialize(access_token, graph)
       @access_token = access_token
@@ -17,16 +15,23 @@ module Connectors
 
     def connect_repo(repo_name)
       repository = client.repo(repo_name)
-      repo_graph_id = @graph.node(REPOSITORY, name: repository.name)
+      repo_graph_id = @graph.node(GraphLabels::Github::REPOSITORY, name: repository.name)
+      return repo_graph_id
     end
 
     def process_commits(repo_name, repo_graph_id)
       commits = client.commits(repo_name)
       commits.each do |commit|
-        graph_id = @graph.node COMMIT,
-          sha: commit.sha,
-          message: commit.commit.message
+        process_commit(commit, repo_graph_id)
       end
+    end
+
+    def process_commit(commit, repo_graph_id)
+      graph_id = @graph.node GraphLabels::Github::COMMIT,
+        sha: commit.sha,
+        message: commit.commit.message
+      # TODO: add author/person handling
+      # TODO: add topic extraction
     end
 
     def client
