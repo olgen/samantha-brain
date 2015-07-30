@@ -16,6 +16,7 @@ gem 'railties', '4.2.3'
 # gem 'sprockets-rails'
 
 gem 'pg'
+gem 'neo4j'
 
 gem 'octokit'
 
