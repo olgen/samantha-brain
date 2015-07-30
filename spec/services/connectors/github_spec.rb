@@ -6,6 +6,7 @@ describe klass = Connectors::Github do
   let(:connector) { klass.new(access_token, graph) }
   let(:owner) { 'olgen' }
   let(:repo) { "olgen/lita-samantha" }
+  let(:repo_graph_id) { "repository_#{repo}" }
 
   describe "#repos" do
     subject { connector.repos(owner) }
@@ -17,6 +18,20 @@ describe klass = Connectors::Github do
     it "creates a node for the repo" do
       expect(graph).to receive(:node)
         .with("GithubRepository", {name: repo.split("/").last})
+        .and_return(repo_graph_id)
+      subject
+    end
+
+  end
+
+  describe "#process_commits" do
+    subject { connector.process_commits(repo, repo_graph_id) }
+
+    it "creates a node for each commit" do
+      expect(graph).to receive(:node)
+        .with("GithubCommit", hash_including(:message, :sha))
+        .at_least(1).times
+        .and_return(1)
       subject
     end
   end
