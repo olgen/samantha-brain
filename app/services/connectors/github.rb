@@ -30,8 +30,15 @@ module Connectors
       graph_id = @graph.node GraphLabels::Github::COMMIT,
         sha: commit.sha,
         message: commit.commit.message
-      # TODO: add author/person handling
+
+      author = commit.commit.author
+      create_person(author.email, author.name, commit.author.login)
+      # TODO: add author-relation handling
       # TODO: add topic extraction
+    end
+
+    def create_person(email, name, login = nil)
+      @client.node(GraphLabels::Person, name: name, email: email, login: login)
     end
 
     def client
