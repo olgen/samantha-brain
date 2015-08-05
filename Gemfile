@@ -21,6 +21,7 @@ gem 'octokit'
 gem 'thin'
 
 group :development, :test do
+  gem 'database_cleaner'
   gem 'pry-byebug'
   gem "awesome_print"
   gem 'rspec-rails', '~> 3.0'

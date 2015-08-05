@@ -16,7 +16,29 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
 RSpec.configure do |config|
+
+  require 'database_cleaner'
+  DatabaseCleaner[:neo4j, connection: {type: :server_db, path: ENV['NEO4J_URL']}].strategy = :deletion
+  #for transaction strategy
+  #.strategy = :deletion     #for deletion strategy
+
+  config.before(:suite) do
+    # DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.strategy = :truncation
+    puts "Running before:suite clean with truncation"
+    # DatabaseCleaner.clean_with(:truncation)
+  end
+
+  # config.around(:each) do |example|
+  #   DatabaseCleaner.cleaning do
+  #     example.run
+  #   end
+  # end
+
+
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
