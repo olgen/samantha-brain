@@ -15,25 +15,21 @@ describe klass = Connectors::Github do
 
   describe "#connect_repo" do
     subject { connector.connect_repo(repo) }
-    it "creates a node for the repo" do
-      expect(graph).to receive(:node)
-        .with("GithubRepository", {name: repo.split("/").last})
-        .and_return(repo_graph_id)
-      subject
-    end
 
+    it "creates a node for the repo" do
+      subject
+      repo_node = Graph::Github::Repository.last
+      expect(repo_node.name).to eql(repo.split("/").last)
+    end
   end
 
   describe "#process_commits" do
     subject { connector.process_commits(repo, repo_graph_id) }
 
-    it "creates a node for each commit" do
-      expect(graph).to receive(:node)
-        .with("GithubCommit", hash_including(:message, :sha))
-        .at_least(1).times
-        .and_return(1)
-      subject
-    end
+    it 'creates commits' do
+      expect { subject }.to change{ Graph::Github::Commit.count }
+   end
+
   end
 
 end

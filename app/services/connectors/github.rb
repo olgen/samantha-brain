@@ -15,8 +15,10 @@ module Connectors
 
     def connect_repo(repo_name)
       repository = client.repo(repo_name)
-      repo_graph_id = @graph.node(GraphLabels::Github::REPOSITORY, name: repository.name)
-      return repo_graph_id
+      Graph::Github::Repository.create!(name: repository.name,
+                                        full_name: repository.full_name,
+                                        private: repository.private
+                                       )
     end
 
     def process_commits(repo_name, repo_graph_id)
@@ -27,9 +29,7 @@ module Connectors
     end
 
     def process_commit(commit, repo_graph_id)
-      graph_id = @graph.node GraphLabels::Github::COMMIT,
-        sha: commit.sha,
-        message: commit.commit.message
+      Graph::Github::Commit.create! sha: commit.sha, message: commit.commit.message
 
       author = commit.commit.author
       create_person(author.email, author.name, commit.author.login)
@@ -38,7 +38,7 @@ module Connectors
     end
 
     def create_person(email, name, login = nil)
-      @client.node(GraphLabels::Person, name: name, email: email, login: login)
+      Graph::Person.create! name: name, email: email, login: login
     end
 
     def client
