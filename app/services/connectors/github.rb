@@ -13,17 +13,18 @@ module Connectors
 
     def connect_repo(repo_name)
       repository = client.repo(repo_name)
-      repo = ::Github::Repository.find_or_create({full_name: repository.full_name},
+      repo_node = ::Github::Repository.find_or_create({full_name: repository.full_name},
         {
           name: repository.name,
           private: repository.private,
         })
-      # TODO: add topic extraction
+      TopicManager.new(repo_node).assign_topics(repo_node.full_name)
+      return repo_node
     end
 
     def process_commits(repo_name, repo_node)
       commits = client.commits(repo_name)
-      commits.each do |commit|
+      commits.map do |commit|
         process_commit(commit, repo_node)
       end
     end
@@ -38,6 +39,7 @@ module Connectors
       commit_node.save!
 
       TopicManager.new(commit_node).assign_topics(commit_node.message, commit_node.sha)
+      return commit
     end
 
     def create_author(commit)
