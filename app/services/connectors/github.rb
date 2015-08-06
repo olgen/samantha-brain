@@ -6,7 +6,6 @@ module Connectors
       @access_token = access_token
     end
 
-
     def repos(owner)
       repos = client.repos(owner)
       repos.map{|r| r['full_name']}
@@ -19,6 +18,7 @@ module Connectors
           name: repository.name,
           private: repository.private,
         })
+      # TODO: add topic extraction
     end
 
     def process_commits(repo_name, repo_node)
@@ -37,7 +37,7 @@ module Connectors
       commit_node.author = create_author(commit)
       commit_node.save!
 
-      # TODO: add topic extraction
+      TopicManager.new(commit_node).assign_topics(commit_node.message, commit_node.sha)
     end
 
     def create_author(commit)

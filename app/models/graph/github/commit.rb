@@ -14,4 +14,9 @@ class Graph::Github::Commit
     type: 'CREATED',
     unique: true
 
+  has_many :out, :topics,
+    model_class: Graph::Topic,
+    type: 'HAS_TOPIC',
+    unique: true
+
 end
