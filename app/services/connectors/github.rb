@@ -13,7 +13,7 @@ module Connectors
 
     def connect_repo(repo_name)
       repository = client.repo(repo_name)
-      repo = Graph::Github::Repository.find_or_create({full_name: repository.full_name},
+      repo = ::Github::Repository.find_or_create({full_name: repository.full_name},
         {
           name: repository.name,
           private: repository.private,
@@ -29,7 +29,7 @@ module Connectors
     end
 
     def process_commit(commit, repo_node)
-      commit_node = Graph::Github::Commit.find_or_create({sha: commit.sha}, {
+      commit_node = ::Github::Commit.find_or_create({sha: commit.sha}, {
         message: commit.commit.message,
       })
 
@@ -42,7 +42,7 @@ module Connectors
 
     def create_author(commit)
       author = commit.commit.author
-      Graph::Person.find_or_create({email: author.email},
+      Person.find_or_create({email: author.email},
         {name: author.name,  login: commit.author.login})
     end
 

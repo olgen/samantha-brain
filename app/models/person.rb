@@ -1,4 +1,4 @@
-class Graph::Person
+class Person
   include Neo4j::ActiveNode
 
   property :email, index: :exact, unique: true

@@ -1,4 +1,4 @@
-class Graph::Github::Repository
+class Github::Repository
   include Neo4j::ActiveNode
 
   property :full_name, index: :exact, unique: true
@@ -6,7 +6,7 @@ class Graph::Github::Repository
   property :private, type: Boolean
 
   has_many :in, :commits,
-    model_class: Graph::Github::Commit,
+    model_class: Github::Commit,
     type: 'BELONGS_TO',
     unique: true
 

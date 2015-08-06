@@ -1,4 +1,4 @@
-class Graph::Topic
+class Topic
   include Neo4j::ActiveNode
 
   property :name, index: :exact, unique: true

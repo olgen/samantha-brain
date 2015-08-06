@@ -27,16 +27,16 @@ describe klass = Connectors::Github do
     end
 
     it 'creates commits' do
-      expect { subject }.to change{ Graph::Github::Commit.count }
+      expect { subject }.to change{ Github::Commit.count }
     end
 
     it 'creates relationships to repo & author' do
       subject
-      commit_node = Graph::Github::Commit.last
+      commit_node = Github::Commit.last
       expect(commit_node.repository).to eql(repo_node)
       expect(repo_node.commits).to include(commit_node)
 
-      expect(commit_node.author).to be_a(Graph::Person)
+      expect(commit_node.author).to be_a(Person)
       expect(commit_node.author.creations).to include(commit_node)
     end
 

@@ -8,7 +8,7 @@ describe TopicManager do
     css
     js
   )
-  let(:node) { Graph::Github::Commit.find_or_create( {sha: SecureRandom.hex}, {message: message}) }
+  let(:node) { Github::Commit.find_or_create( {sha: SecureRandom.hex}, {message: message}) }
 
   let(:manager) { TopicManager.new(node) }
   let(:topics) { manager.assign_topics(node.message) }

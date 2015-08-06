@@ -13,7 +13,7 @@ class TopicManager
   protected
 
   def create_topic(name)
-    Graph::Topic.find_or_create(name: name)
+    Topic.find_or_create(name: name)
   end
 
   def topics(*string_attrs)
