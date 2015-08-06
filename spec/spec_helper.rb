@@ -28,7 +28,7 @@ RSpec.configure do |config|
     # DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.strategy = :truncation
     puts "Running before:suite clean with truncation"
-    # DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   # config.around(:each) do |example|

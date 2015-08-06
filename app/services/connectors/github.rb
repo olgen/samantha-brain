@@ -2,9 +2,8 @@ module Connectors
 
   class Github
 
-    def initialize(access_token, graph)
+    def initialize(access_token)
       @access_token = access_token
-      @graph = graph
     end
 
 
@@ -15,30 +14,36 @@ module Connectors
 
     def connect_repo(repo_name)
       repository = client.repo(repo_name)
-      Graph::Github::Repository.create!(name: repository.name,
-                                        full_name: repository.full_name,
-                                        private: repository.private
-                                       )
+      repo = Graph::Github::Repository.find_or_create({full_name: repository.full_name},
+        {
+          name: repository.name,
+          private: repository.private,
+        })
     end
 
-    def process_commits(repo_name, repo_graph_id)
+    def process_commits(repo_name, repo_node)
       commits = client.commits(repo_name)
       commits.each do |commit|
-        process_commit(commit, repo_graph_id)
+        process_commit(commit, repo_node)
       end
     end
 
-    def process_commit(commit, repo_graph_id)
-      Graph::Github::Commit.create! sha: commit.sha, message: commit.commit.message
+    def process_commit(commit, repo_node)
+      commit_node = Graph::Github::Commit.find_or_create({sha: commit.sha}, {
+        message: commit.commit.message,
+      })
 
-      author = commit.commit.author
-      create_person(author.email, author.name, commit.author.login)
-      # TODO: add author-relation handling
+      commit_node.repository = repo_node
+      commit_node.author = create_author(commit)
+      commit_node.save!
+
       # TODO: add topic extraction
     end
 
-    def create_person(email, name, login = nil)
-      Graph::Person.create! name: name, email: email, login: login
+    def create_author(commit)
+      author = commit.commit.author
+      Graph::Person.find_or_create({email: author.email},
+        {name: author.name,  login: commit.author.login})
     end
 
     def client
