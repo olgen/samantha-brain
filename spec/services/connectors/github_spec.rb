@@ -5,7 +5,9 @@ describe klass = Connectors::Github do
   let(:connector) { klass.new(access_token) }
   let(:owner) { 'olgen' }
   let(:repo_full_name) { "olgen/lita-samantha" }
+
   let(:repo_node) { connector.connect_repo(repo_full_name) }
+  let(:branches) {  connector.process_branches(repo_full_name)  }
 
   describe "#repos" do
     subject { connector.repos(owner) }
@@ -19,6 +21,12 @@ describe klass = Connectors::Github do
       subject
       expect(repo_node.name).to eql(repo_full_name.split("/").last)
     end
+
+  end
+
+  describe "#process_branches" do
+    subject { branches }
+    it { should_not be_empty }
   end
 
   describe "#process_commits" do

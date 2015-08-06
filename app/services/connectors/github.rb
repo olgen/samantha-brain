@@ -13,13 +13,20 @@ module Connectors
 
     def connect_repo(repo_name)
       repository = client.repo(repo_name)
-      repo_node = ::Github::Repository.find_or_create({full_name: repository.full_name},
-        {
-          name: repository.name,
-          private: repository.private,
-        })
+      repo_node = create_repo(repository.full_name, repository.name, repository.private)
       TopicManager.new(repo_node).assign_topics(repo_node.full_name)
       return repo_node
+    end
+
+    def process_branches(repo_full_name)
+      repo_node = create_repo(repo_full_name)
+      branches = client.branches(repo_full_name)
+      branches.each do |branch|
+        branch_node = create_branch(repo_full_name, branch.name)
+        branch_node.repository = repo_node
+        TopicManager.new(branch_node).assign_topics(branch_node.name)
+      end
+      # TODO: assign commits to this branch
     end
 
     def process_commits(repo_name, repo_node)
@@ -27,6 +34,24 @@ module Connectors
       commits.map do |commit|
         process_commit(commit, repo_node)
       end
+    end
+
+    protected
+
+    def create_repo(full_name, name=nil, is_private=nil)
+      ::Github::Repository.find_or_create({full_name: full_name},
+        {
+          name: name,
+          private: is_private,
+        })
+    end
+
+    def create_branch(repo_full_name, branch_name)
+      full_name = File.join repo_full_name, branch_name
+      ::Github::Branch.find_or_create({full_name: full_name},
+        {
+          name: branch_name,
+        })
     end
 
     def process_commit(commit, repo_node)
