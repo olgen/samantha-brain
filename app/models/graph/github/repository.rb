@@ -5,6 +5,9 @@ class Graph::Github::Repository
   property :name
   property :private, type: Boolean
 
-  has_many :in, :commits, model_class: Graph::Github::Commit, type: 'BELONGS_TO'
+  has_many :in, :commits,
+    model_class: Graph::Github::Commit,
+    type: 'BELONGS_TO',
+    unique: true
 
 end

@@ -6,6 +6,8 @@ class Graph::Person
   property :login
 
   # `model_class: false` -> for polymorphic creations
-  has_many :out, :creations, type: 'CREATED', model_class: false
+  has_many :out, :creations,
+    type: 'CREATED',
+    model_class: false
 
 end
