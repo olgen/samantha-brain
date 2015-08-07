@@ -13,17 +13,18 @@ gem 'railties', '4.2.3'
 # gem 'actionview', '4.2.3'
 # gem 'sprockets-rails'
 
+gem 'pg'
+gem 'neo4j'
 
 gem 'grape'
 gem 'grape-entity'
 gem 'rack-cors'
+gem 'thin'
 
-gem 'pg'
-gem 'neo4j'
+gem 'omniauth'
+gem 'omniauth-github'
 
 gem 'octokit'
-
-gem 'thin'
 
 group :development, :test do
   gem 'database_cleaner'

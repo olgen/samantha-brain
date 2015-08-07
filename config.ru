@@ -8,4 +8,10 @@ use Rack::Cors do
     resource '*', headers: :any, methods: :get
   end
 end
+
+use Rack::Session::Cookie
+use OmniAuth::Builder do
+  provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
+end
+
 run Rails.application
