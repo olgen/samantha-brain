@@ -18,7 +18,11 @@ module SamanthaBrain
 
     config.autoload_paths += %W(
       #{config.root}/app/services
-      )
+      #{config.root}/api
+    )
+    config.autoload_paths += Dir[Rails.root.join("api", "*")]
+    config.paths.add File.join("api"), glob: File.join("**", "*.rb")
+
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

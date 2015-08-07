@@ -13,6 +13,11 @@ gem 'railties', '4.2.3'
 # gem 'actionview', '4.2.3'
 # gem 'sprockets-rails'
 
+
+gem 'grape'
+gem 'grape-entity'
+gem 'rack-cors'
+
 gem 'pg'
 gem 'neo4j'
 
