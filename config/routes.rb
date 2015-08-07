@@ -53,5 +53,8 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  mount API => "/"
+
+  get '/auth/:provider/callback', to: 'oauth#create'
+
+  mount API => "/api"
 end
