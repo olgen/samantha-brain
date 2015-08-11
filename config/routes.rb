@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   #   end
 
   get '/auth/:provider/callback', to: 'oauth#create'
+  get '/auth/failure', :to => 'oauth#failure'
 
   mount API => "/api"
 end
